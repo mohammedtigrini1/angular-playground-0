@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { ElementRef, ViewChild } from '@angular/core';
 import { DrawShapeService } from './services/actions/draw-shape.service';
+import { SelectShapesService } from './services/actions/select-shapes.service';
 
 @Component({
   selector: 'my-app',
@@ -13,13 +14,20 @@ export class AppComponent {
   myCanvas: ElementRef<HTMLCanvasElement>;
   public context: CanvasRenderingContext2D;
 
-  constructor(private drawShapeService: DrawShapeService) {}
+  constructor(
+    private drawShapeService: DrawShapeService,
+    private selectShapeService: SelectShapesService
+  ) {}
 
   ngAfterViewInit(): void {
     this.context = this.myCanvas.nativeElement.getContext('2d');
     this.drawShapeService.context = this.context;
     this.drawShapeService.offsetLeft = this.myCanvas.nativeElement.offsetLeft;
     this.drawShapeService.offsetTop = this.myCanvas.nativeElement.offsetTop;
+
+    this.selectShapeService.context = this.context;
+    this.selectShapeService.offsetLeft = this.myCanvas.nativeElement.offsetLeft;
+    this.selectShapeService.offsetTop = this.myCanvas.nativeElement.offsetTop;
   }
 
   onMouseDown(event) {
@@ -35,6 +43,12 @@ export class AppComponent {
   }
 
   onDoubleClick(event) {
-    console.log(event.clientX, event.clientY);
+    this.selectShapeService.isShapeSelected(event);
+    // console.log(event.clientX, event.clientY);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    console.log(event.key);
   }
 }

@@ -9,7 +9,13 @@ export class ShapeListService {
     this.shapesList.push(shape);
   }
 
+  deleteShape(shape: any) {
+    this.shapesList = this.shapesList.filter((s) => s == shape);
+  }
+
   public getShapesList() {
     return this.shapesList;
   }
+
+  public drawShapes() {}
 }

@@ -37,12 +37,17 @@ export class DrawShapeService {
       this._context.clearRect(0, 0, 500, 500);
       this.redrawShapes();
       this._context.fillStyle = '#FF0000';
-      this._context.fillRect(
-        this.initialValueX,
-        this.initialValueY,
-        event.clientX - this._offsetLeft - this.initialValueX,
-        event.clientY - this._offsetTop - this.initialValueY
-      );
+      const width = event.clientX - this._offsetLeft - this.initialValueX;
+      const height = event.clientY - this._offsetTop - this.initialValueY;
+
+      if (width > 5 || height > 5) {
+        this._context.fillRect(
+          this.initialValueX,
+          this.initialValueY,
+          event.clientX - this._offsetLeft - this.initialValueX,
+          event.clientY - this._offsetTop - this.initialValueY
+        );
+      }
     }
   }
 
@@ -58,7 +63,9 @@ export class DrawShapeService {
       name: Shapes.RECTANGLE,
       coordinates: coordinates,
     };
-    this.shapeListService.addShape(shape);
+    if (shape.coordinates.width > 5 || shape.coordinates.height > 5) {
+      this.shapeListService.addShape(shape);
+    }
     this.isDrawing = false;
   }
 
