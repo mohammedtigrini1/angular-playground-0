@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Shapes } from '../../enums/shapes.enum';
+import { ShapeListService } from '../shape-list.service';
 
 @Injectable()
 export class DrawShapeService {
@@ -9,7 +11,7 @@ export class DrawShapeService {
   private initialValueX;
   private initialValueY;
 
-  constructor() {}
+  constructor(private shapeListService: ShapeListService) {}
 
   set context(context) {
     this._context = context;
@@ -33,11 +35,7 @@ export class DrawShapeService {
   onMouseMove(event) {
     if (this.isDrawing) {
       this._context.clearRect(0, 0, 500, 500);
-      console.log(this.initialValueX, this.initialValueY);
-      console.log(
-        event.clientX - this._offsetLeft - this.initialValueX,
-        event.clientY - this._offsetTop - this.initialValueY
-      );
+      this.redrawShapes();
       this._context.fillStyle = '#FF0000';
       this._context.fillRect(
         this.initialValueX,
@@ -50,6 +48,29 @@ export class DrawShapeService {
 
   onMouseUp(event) {
     this.onMouseMove(event);
+    const coordinates = {
+      x: this.initialValueX,
+      y: this.initialValueY,
+      width: event.clientX - this._offsetLeft - this.initialValueX,
+      height: event.clientY - this._offsetTop - this.initialValueY,
+    };
+    const shape = {
+      name: Shapes.RECTANGLE,
+      coordinates: coordinates,
+    };
+    this.shapeListService.addShape(shape);
     this.isDrawing = false;
+  }
+
+  private redrawShapes() {
+    for (let shape of this.shapeListService.getShapesList()) {
+      this._context.fillStyle = '#FF0000';
+      this._context.fillRect(
+        shape.coordinates.x,
+        shape.coordinates.y,
+        shape.coordinates.width,
+        shape.coordinates.height
+      );
+    }
   }
 }

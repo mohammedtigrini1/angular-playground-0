@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ElementRef, NgModule, ViewChild } from '@angular/core';
-import { DrawShapeService } from './services/draw-shape.service';
+import { ElementRef, ViewChild } from '@angular/core';
+import { DrawShapeService } from './services/actions/draw-shape.service';
 
 @Component({
   selector: 'my-app',
@@ -32,5 +32,9 @@ export class AppComponent {
 
   onMouseUp(event) {
     this.drawShapeService.onMouseUp(event);
+  }
+
+  onDoubleClick(event) {
+    console.log(event.clientX, event.clientY);
   }
 }

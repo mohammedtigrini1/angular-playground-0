@@ -5,5 +5,11 @@ export class ShapeListService {
   private shapesList: any[] = [];
   constructor() {}
 
-  addShape(name: string, coordinates: any[]) {}
+  addShape(shape: any) {
+    this.shapesList.push(shape);
+  }
+
+  public getShapesList() {
+    return this.shapesList;
+  }
 }
